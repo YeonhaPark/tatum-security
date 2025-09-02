@@ -202,15 +202,9 @@ export function CreateCloudModal() {
     // Only include schedule fields that are actually enabled
     if (data.scheduleScanEnabled) {
       // Reset disabled fields to default values or exclude them
-      if (!isDateFieldEnabled()) {
-        cleanData.date = "-"; // Default value for disabled date field disabled된 경우 값을 어떻게 보내야 하는지?(질문)
-      }
-      if (!isDayOfWeekFieldEnabled()) {
-        cleanData.weekday = "MON"; // Default value for disabled weekday field
-      }
-      if (!isHourFieldEnabled()) {
-        cleanData.hour = "0"; // Default value for disabled hour field
-      }
+      if (!isDateFieldEnabled()) cleanData.date = "1"; // Default value for disabled date field
+      if (!isDayOfWeekFieldEnabled()) cleanData.weekday = "MON"; // Default value for disabled weekday field
+      if (!isHourFieldEnabled()) cleanData.hour = "0"; // Default value for disabled hour field
     }
 
     console.log("=== CLOUD FORM SUBMISSION ===");
