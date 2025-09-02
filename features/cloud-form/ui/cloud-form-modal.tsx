@@ -890,7 +890,7 @@ export function CreateCloudModal() {
                     render={({ field }) => (
                       <RadioGroup
                         className="flex gap-10"
-                        aria-labelledby="eventProcessEnabled"
+                        aria-labelledby="eventProcessEnabledLabel"
                         value={field.value ? "true" : "false"}
                         onValueChange={(value) =>
                           field.onChange(value === "true")
