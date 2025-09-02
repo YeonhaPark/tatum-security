@@ -21,6 +21,13 @@ const AWSRegionList = [
   "us-west-2",
 ] as const;
 
+// Region options for MultiSelect
+export const getAWSRegionOptions = () =>
+  AWSRegionList.map((region) => ({
+    value: region,
+    label: region === "global" ? "Global" : region.toUpperCase(),
+  }));
+
 type AWSCredentialType = "ACCESS_KEY" | "ASSUME_ROLE" | "ROLES_ANYWHERE"; // ACCESS_KEY만 활성화
 
 interface AWSCredential {
@@ -28,7 +35,16 @@ interface AWSCredential {
   secretAccessKey: string;
   roleArn?: string;
 }
-
+interface AzureCredential {
+  tenantId: string;
+  subscriptionId: string;
+  applicationId: string;
+  secretKey: string;
+}
+interface GCPCredential {
+  projectId?: string;
+  jsonText: string;
+}
 interface AWSEventSource {
   cloudTrailName?: string;
 }
@@ -36,36 +52,17 @@ interface AWSEventSource {
 // 타 프로바이더 예시, 미사용
 type AzureCredentialType = "APPLICATION";
 
-interface AzureCredential {
-  tenantId: string;
-  subscriptionId: string;
-  applicationId: string;
-  secretKey: string;
-}
-
 interface AzureEventSource {
   storageAccountName?: string;
 }
 
 type GCPCredentialType = "JSON_TEXT";
 
-interface GCPCredential {
-  projectId?: string;
-  jsonText: string;
-}
-
 interface GCPEventSource {
   storageAccountName?: string;
 }
 
 interface ScheduleScanSetting {
-  /**
-   * frequency에 따라 변경됨
-   * HOUR  : 매시간을 의미
-   * DAY   : 매일을 의미
-   * WEEK  : 매주을 의미
-   * MONTH : 매월을 의미
-   */
   frequency: "HOUR" | "DAY" | "WEEK" | "MONTH";
   date: string; // '1' ~ '28'
   weekday: "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
@@ -78,14 +75,28 @@ interface Cloud {
   id: string; // GET 요청 시 획득
   provider: Provider;
   name: string;
-  cloudGroupName?: string[];
-  eventProcessEnabled: boolean;
-  userActivityEnabled: boolean;
-  scheduleScanEnabled: boolean;
+  cloudGroupName?: string[]; // 멀티 셀렉트 가능해야함
+  eventProcessEnabled: boolean; // valid, invalid
+  userActivityEnabled: boolean; // off, on
+  scheduleScanEnabled: boolean; // set, not set
   scheduleScanSetting: ScheduleScanSetting;
-  regionList: string[];
+  regionList: string[]; // 멀티 셀렉트 가능해야함.
   proxyUrl?: string;
-  credentials: AWSCredential | AzureCredential | GCPCredential; // GET 요쳥 시 비밀값이라 마스킹 상태로 전달됨
-  credentialType: AWSCredentialType | AzureCredentialType | GCPCredentialType;
-  eventSource?: AWSEventSource | AzureEventSource | GCPEventSource;
+  credentials: AWSCredential | AzureCredential | GCPCredential; // GET 요쳥 시 비밀값이라 마스킹 상태로 전달됨 row 표시 ?
+  credentialType: AWSCredentialType | AzureCredentialType | GCPCredentialType; // row 표시 ?
+  eventSource?: AWSEventSource | AzureEventSource | GCPEventSource; // row 표시 ?
 }
+export { AWSRegionList };
+
+export type {
+  Provider,
+  AWSCredentialType,
+  AWSCredential,
+  AzureCredential,
+  GCPCredential,
+  AWSEventSource,
+  AzureEventSource,
+  GCPEventSource,
+  ScheduleScanSetting,
+  Cloud,
+};
