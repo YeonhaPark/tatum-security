@@ -20,7 +20,7 @@ import {
   ScheduleScanSetting,
   getAWSRegionOptions,
 } from "@/shared/types/clouds";
-import { CloudFormValues } from "@/features/types";
+import { CloudFormValues } from "../model/types";
 import { PlusIcon, EyeOffIcon, EyeIcon } from "lucide-react";
 import {
   Select,
@@ -32,11 +32,9 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
 import { MultiSelect } from "@/shared/ui/multi-select";
 import { cn } from "@/shared/lib/utils";
-import {
-  formatHourTo12Hour,
-  formatTime12Hour,
-  getFrequencyLabel,
-} from "../utils/formatter";
+import { formatHourTo12Hour, formatTime12Hour } from "@/shared/lib/formatter";
+import { getFrequencyLabel } from "../lib/form-utils";
+import { useCreateCloud } from "@/entities/cloud";
 
 export function CreateCloudModal() {
   const [open, setOpen] = useState<boolean>(false);
@@ -54,7 +52,7 @@ export function CreateCloudModal() {
     defaultValues: {
       name: "",
       provider: "AWS",
-      regionList: [],
+      regionList: ["global"],
       cloudGroupName: [],
       scheduleScanEnabled: true,
       eventProcessEnabled: true,
@@ -79,6 +77,8 @@ export function CreateCloudModal() {
   const name = watch("name");
   const credentials = watch("credentials");
   const regionList = watch("regionList");
+
+  const createCloud = useCreateCloud();
 
   // Helper function to check if all required fields are filled
   const isFormValid = () => {
@@ -169,8 +169,7 @@ export function CreateCloudModal() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider]);
 
-  const onSubmit = (data: CloudFormValues) => {
-    // Create a clean copy of data with only enabled fields
+  const onSubmit = async (data: CloudFormValues) => {
     const cleanData = { ...data };
 
     // Only include schedule fields that are actually enabled
@@ -196,34 +195,9 @@ export function CreateCloudModal() {
       }
     }
 
-    console.log("=== CLOUD FORM SUBMISSION ===");
-    console.log("Form Data:", cleanData);
-    console.log("Cloud Name:", cleanData.name);
-    console.log("Provider:", cleanData.provider);
-    console.log("Region List:", cleanData.regionList);
-    console.log("Proxy URL:", cleanData.proxyUrl || "Not specified");
-    console.log("Schedule Scan Enabled:", cleanData.scheduleScanEnabled);
-
-    if (cleanData.scheduleScanEnabled) {
-      const settings = cleanData.scanScheduleSetting;
-      console.log("Schedule Settings:", {
-        frequency: settings.frequency,
-        ...(isDateFieldEnabled() && { date: settings.date }),
-        ...(isDayOfWeekFieldEnabled() && { weekday: settings.weekday }),
-        ...(isHourFieldEnabled() && { hour: settings.hour }),
-        minute: settings.minute,
-      });
-    }
-
-    console.log("Credentials:", cleanData.credentials);
-
-    if (cleanData.provider === "AWS") {
-      console.log("Key Registration Method:", cleanData.credentialType);
-    }
-
-    console.log("=== END SUBMISSION ===");
-
-    // Submit 성공 후 모달 닫기
+    console.log("=== PAYLOAD ===");
+    console.log("PAYLOAD:", cleanData);
+    await createCloud.mutateAsync(cleanData);
     setOpen(false);
   };
   return (
