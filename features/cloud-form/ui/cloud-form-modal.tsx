@@ -365,6 +365,10 @@ export function CreateCloudModal() {
                       <Input
                         className="w-[60%]"
                         id="credentials.accessKey"
+                        autoComplete="off"
+                        spellCheck={false}
+                        autoCorrect="off"
+                        autoCapitalize="none"
                         {...register("credentials.accessKey", {
                           required: true,
                         })}
@@ -381,6 +385,10 @@ export function CreateCloudModal() {
                         <Input
                           id="credentials.secretAccessKey"
                           type={showSecretKey ? "text" : "password"}
+                          autoComplete="off"
+                          spellCheck="false"
+                          autoCorrect="off"
+                          autoCapitalize="none"
                           {...register("credentials.secretAccessKey", {
                             required: true,
                           })}
@@ -388,6 +396,12 @@ export function CreateCloudModal() {
                         <button
                           type="button"
                           className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                          aria-label={
+                            showSecretKey
+                              ? "Hide secret key"
+                              : "Show secret key"
+                          }
+                          aria-pressed={showSecretKey}
                           onClick={() => setShowSecretKey(!showSecretKey)}
                         >
                           {showSecretKey ? (
@@ -472,6 +486,10 @@ export function CreateCloudModal() {
                         <Input
                           id="credentials.secretKey"
                           type={showAzureSecretKey ? "text" : "password"}
+                          autoComplete="off"
+                          spellCheck={false}
+                          autoCorrect="off"
+                          autoCapitalize="none"
                           {...register("credentials.secretKey", {
                             required: true,
                           })}
@@ -482,6 +500,12 @@ export function CreateCloudModal() {
                           onClick={() =>
                             setShowAzureSecretKey(!showAzureSecretKey)
                           }
+                          aria-label={
+                            showAzureSecretKey
+                              ? "Hide secret key"
+                              : "Show secret key"
+                          }
+                          aria-pressed={showAzureSecretKey}
                         >
                           {showAzureSecretKey ? (
                             <EyeOffIcon className="h-4 w-4 text-gray-400" />
@@ -519,6 +543,10 @@ export function CreateCloudModal() {
                       <Input
                         className="w-[60%]"
                         id="credentials.jsonText"
+                        autoComplete="off"
+                        spellCheck={false}
+                        autoCorrect="off"
+                        autoCapitalize="none"
                         {...register("credentials.jsonText", {
                           required: true,
                         })}
