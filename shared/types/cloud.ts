@@ -86,10 +86,10 @@ interface Cloud {
   credentialType: AWSCredentialType | AzureCredentialType | GCPCredentialType; // row 표시 ?
   eventSource?: AWSEventSource | AzureEventSource | GCPEventSource; // row 표시 ?
 }
+export { AWSRegionList };
 
 export type {
   Provider,
-  AWSRegionList,
   AWSCredentialType,
   AWSCredential,
   AzureCredential,
