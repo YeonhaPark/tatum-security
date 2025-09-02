@@ -44,7 +44,6 @@ export function CreateCloudModal() {
   const [showAzureSecretKey, setShowAzureSecretKey] = useState<boolean>(false);
   const {
     register,
-    unregister,
     setValue,
     handleSubmit,
     control,
@@ -55,7 +54,6 @@ export function CreateCloudModal() {
     defaultValues: {
       name: "",
       provider: "AWS",
-      keyRegistrationMethod: "ACCESS_KEY",
       regionList: [],
       cloudGroupName: [],
       scheduleScanEnabled: true,
@@ -98,10 +96,7 @@ export function CreateCloudModal() {
     if (provider === "AWS") {
       const awsCredentials = credentials as AWSCredential;
       // Only allow ACCESS_KEY method (other methods are disabled)
-      const keyMethod = watch("keyRegistrationMethod");
-      if (keyMethod !== "ACCESS_KEY") {
-        return false;
-      }
+
       return !!(awsCredentials?.accessKey && awsCredentials?.secretAccessKey);
     } else if (provider === "AZURE") {
       const azureCredentials = credentials as AzureCredential;
@@ -161,7 +156,6 @@ export function CreateCloudModal() {
         roleArn: "",
       } as AWSCredential);
       // keyRegistrationMethod 기본값도 보장
-      setValue("keyRegistrationMethod", "ACCESS_KEY");
     } else if (provider === "AZURE") {
       setValue("credentials", {
         tenantId: "",
@@ -169,10 +163,8 @@ export function CreateCloudModal() {
         applicationId: "",
         secretKey: "",
       } as AzureCredential);
-      unregister("keyRegistrationMethod");
     } else if (provider === "GCP") {
       setValue("credentials", { projectId: "", jsonText: "" } as GCPCredential);
-      unregister("keyRegistrationMethod");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider]);
@@ -226,7 +218,7 @@ export function CreateCloudModal() {
     console.log("Credentials:", cleanData.credentials);
 
     if (cleanData.provider === "AWS") {
-      console.log("Key Registration Method:", cleanData.keyRegistrationMethod);
+      console.log("Key Registration Method:", cleanData.credentialType);
     }
 
     console.log("=== END SUBMISSION ===");
@@ -316,16 +308,16 @@ export function CreateCloudModal() {
                 <div>
                   <Label
                     className="mb-3 text-gray-700 font-semibold"
-                    htmlFor="keyRegistrationMethod"
+                    htmlFor="credentialType"
                   >
                     Select Key Registration Method
                   </Label>
                   <Controller
-                    name="keyRegistrationMethod"
+                    name="credentialType"
                     control={control}
                     render={({ field }) => (
                       <Select {...field} onValueChange={field.onChange}>
-                        <SelectTrigger id="keyRegistrationMethod">
+                        <SelectTrigger id="credentialType">
                           <SelectValue placeholder="Access Key" />
                         </SelectTrigger>
                         <SelectContent>
