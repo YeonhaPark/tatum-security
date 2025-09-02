@@ -1,4 +1,4 @@
-import { ScheduleScanSetting } from "@/shared/types/cloud";
+import { ScheduleScanSetting } from "@/shared/types/clouds";
 
 // Helper function to convert 24-hour to 12-hour format
 export const formatHourTo12Hour = (hour: string) => {
