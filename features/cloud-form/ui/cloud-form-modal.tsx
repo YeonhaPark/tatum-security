@@ -17,10 +17,10 @@ import {
   AWSCredential,
   AzureCredential,
   GCPCredential,
-  Cloud,
   ScheduleScanSetting,
   getAWSRegionOptions,
-} from "@/shared/types/cloud";
+} from "@/shared/types/clouds";
+import { CloudFormValues } from "@/features/types";
 import { PlusIcon, EyeOffIcon, EyeIcon } from "lucide-react";
 import {
   Select,
@@ -38,39 +38,12 @@ import {
   getFrequencyLabel,
 } from "../utils/formatter";
 
-type CloudFormValues = {
-  name: string;
-  regionList: string[];
-  proxyUrl?: string;
-  scheduleScanEnabled: Cloud["scheduleScanEnabled"];
-  frequency: ScheduleScanSetting["frequency"];
-  date: ScheduleScanSetting["date"];
-  weekday: ScheduleScanSetting["weekday"];
-  hour: ScheduleScanSetting["hour"];
-  minute: ScheduleScanSetting["minute"];
-} & (
-  | {
-      provider: "AWS";
-      keyRegistrationMethod: "ACCESS_KEY" | "ASSUME_ROLE" | "ROLES_ANYWHERE";
-      credentials: AWSCredential;
-    }
-  | {
-      provider: "AZURE";
-      credentials: AzureCredential;
-    }
-  | {
-      provider: "GCP";
-      credentials: GCPCredential;
-    }
-);
-
 export function CreateCloudModal() {
   const [open, setOpen] = useState<boolean>(false);
   const [showSecretKey, setShowSecretKey] = useState<boolean>(false);
   const [showAzureSecretKey, setShowAzureSecretKey] = useState<boolean>(false);
   const {
     register,
-    unregister,
     setValue,
     handleSubmit,
     control,
@@ -81,22 +54,28 @@ export function CreateCloudModal() {
     defaultValues: {
       name: "",
       provider: "AWS",
-      keyRegistrationMethod: "ACCESS_KEY",
-      regionList: ["global"],
+      regionList: [],
+      cloudGroupName: [],
       scheduleScanEnabled: true,
-      frequency: "DAY",
-      date: "1",
-      weekday: "MON",
-      hour: "12",
-      minute: "0",
+      eventProcessEnabled: true,
+      userActivityEnabled: true,
+      scanScheduleSetting: {
+        frequency: "DAY",
+        date: "1",
+        weekday: "MON",
+        hour: "12",
+        minute: "0",
+      },
       credentials: {
         accessKey: "",
         secretAccessKey: "",
       },
+      credentialType: "ACCESS_KEY",
     } as CloudFormValues,
   });
   const provider = watch("provider");
-  const frequency = watch("frequency");
+  const scanScheduleSetting = watch("scanScheduleSetting");
+  const frequency = scanScheduleSetting?.frequency;
   const name = watch("name");
   const credentials = watch("credentials");
   const regionList = watch("regionList");
@@ -117,10 +96,7 @@ export function CreateCloudModal() {
     if (provider === "AWS") {
       const awsCredentials = credentials as AWSCredential;
       // Only allow ACCESS_KEY method (other methods are disabled)
-      const keyMethod = watch("keyRegistrationMethod");
-      if (keyMethod !== "ACCESS_KEY") {
-        return false;
-      }
+
       return !!(awsCredentials?.accessKey && awsCredentials?.secretAccessKey);
     } else if (provider === "AZURE") {
       const azureCredentials = credentials as AzureCredential;
@@ -152,10 +128,11 @@ export function CreateCloudModal() {
   };
 
   const schedule = (frequency: ScheduleScanSetting["frequency"]) => {
-    const minute = watch("minute") || "0";
-    const hour = watch("hour") || "12";
-    const date = watch("date") || "1";
-    const weekday = watch("weekday") || "MON";
+    const setting = scanScheduleSetting;
+    const minute = setting?.minute || "0";
+    const hour = setting?.hour || "12";
+    const date = setting?.date || "1";
+    const weekday = setting?.weekday || "MON";
 
     switch (frequency) {
       case "DAY":
@@ -179,7 +156,6 @@ export function CreateCloudModal() {
         roleArn: "",
       } as AWSCredential);
       // keyRegistrationMethod 기본값도 보장
-      setValue("keyRegistrationMethod", "ACCESS_KEY");
     } else if (provider === "AZURE") {
       setValue("credentials", {
         tenantId: "",
@@ -187,10 +163,8 @@ export function CreateCloudModal() {
         applicationId: "",
         secretKey: "",
       } as AzureCredential);
-      unregister("keyRegistrationMethod");
     } else if (provider === "GCP") {
       setValue("credentials", { projectId: "", jsonText: "" } as GCPCredential);
-      unregister("keyRegistrationMethod");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider]);
@@ -201,10 +175,25 @@ export function CreateCloudModal() {
 
     // Only include schedule fields that are actually enabled
     if (data.scheduleScanEnabled) {
-      // Reset disabled fields to default values or exclude them
-      if (!isDateFieldEnabled()) cleanData.date = "1"; // Default value for disabled date field
-      if (!isDayOfWeekFieldEnabled()) cleanData.weekday = "MON"; // Default value for disabled weekday field
-      if (!isHourFieldEnabled()) cleanData.hour = "0"; // Default value for disabled hour field
+      // Reset disabled fields to default values within scanScheduleSetting
+      if (!isDateFieldEnabled()) {
+        cleanData.scanScheduleSetting = {
+          ...cleanData.scanScheduleSetting,
+          date: "1",
+        };
+      }
+      if (!isDayOfWeekFieldEnabled()) {
+        cleanData.scanScheduleSetting = {
+          ...cleanData.scanScheduleSetting,
+          weekday: "MON",
+        };
+      }
+      if (!isHourFieldEnabled()) {
+        cleanData.scanScheduleSetting = {
+          ...cleanData.scanScheduleSetting,
+          hour: "0",
+        };
+      }
     }
 
     console.log("=== CLOUD FORM SUBMISSION ===");
@@ -216,19 +205,20 @@ export function CreateCloudModal() {
     console.log("Schedule Scan Enabled:", cleanData.scheduleScanEnabled);
 
     if (cleanData.scheduleScanEnabled) {
+      const settings = cleanData.scanScheduleSetting;
       console.log("Schedule Settings:", {
-        frequency: cleanData.frequency,
-        ...(isDateFieldEnabled() && { date: cleanData.date }),
-        ...(isDayOfWeekFieldEnabled() && { weekday: cleanData.weekday }),
-        ...(isHourFieldEnabled() && { hour: cleanData.hour }),
-        minute: cleanData.minute,
+        frequency: settings.frequency,
+        ...(isDateFieldEnabled() && { date: settings.date }),
+        ...(isDayOfWeekFieldEnabled() && { weekday: settings.weekday }),
+        ...(isHourFieldEnabled() && { hour: settings.hour }),
+        minute: settings.minute,
       });
     }
 
     console.log("Credentials:", cleanData.credentials);
 
     if (cleanData.provider === "AWS") {
-      console.log("Key Registration Method:", cleanData.keyRegistrationMethod);
+      console.log("Key Registration Method:", cleanData.credentialType);
     }
 
     console.log("=== END SUBMISSION ===");
@@ -236,7 +226,6 @@ export function CreateCloudModal() {
     // Submit 성공 후 모달 닫기
     setOpen(false);
   };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -319,16 +308,16 @@ export function CreateCloudModal() {
                 <div>
                   <Label
                     className="mb-3 text-gray-700 font-semibold"
-                    htmlFor="keyRegistrationMethod"
+                    htmlFor="credentialType"
                   >
                     Select Key Registration Method
                   </Label>
                   <Controller
-                    name="keyRegistrationMethod"
+                    name="credentialType"
                     control={control}
                     render={({ field }) => (
                       <Select {...field} onValueChange={field.onChange}>
-                        <SelectTrigger id="keyRegistrationMethod">
+                        <SelectTrigger id="credentialType">
                           <SelectValue placeholder="Access Key" />
                         </SelectTrigger>
                         <SelectContent>
@@ -593,6 +582,35 @@ export function CreateCloudModal() {
               </div>
             </div>
             <hr className="my-10 border-gray-200" />
+            {/* Cloud Group */}
+            <div>
+              <div>
+                <Label
+                  className="mb-3 text-gray-700 font-semibold"
+                  htmlFor="cloudGroupName"
+                >
+                  Cloud Group
+                </Label>
+                <Controller
+                  name="cloudGroupName"
+                  control={control}
+                  render={({ field }) => (
+                    <MultiSelect
+                      options={[
+                        { label: "AWS-Group", value: "AWS-Group" },
+                        { label: "GCP-Group", value: "GCP-Group" },
+                        { label: "Azure-Group", value: "Azure-Group" },
+                      ]}
+                      selected={field.value || []}
+                      onChange={field.onChange}
+                      placeholder="Select group..."
+                      className="w-full"
+                    />
+                  )}
+                />
+              </div>
+            </div>
+            <hr className="my-10 border-gray-200" />
             <div>
               <div>
                 <div>
@@ -615,9 +633,9 @@ export function CreateCloudModal() {
                         }
                       >
                         <div className="flex items-center space-x-3">
-                          <RadioGroupItem value="true" id="enabled" />
+                          <RadioGroupItem value="true" id="schedule-enabled" />
                           <Label
-                            htmlFor="enabled"
+                            htmlFor="schedule-enabled"
                             className={
                               watch("scheduleScanEnabled") === true
                                 ? "text-gray-800"
@@ -628,9 +646,12 @@ export function CreateCloudModal() {
                           </Label>
                         </div>
                         <div className="flex items-center space-x-3">
-                          <RadioGroupItem value="false" id="disabled" />
+                          <RadioGroupItem
+                            value="false"
+                            id="schedule-disabled"
+                          />
                           <Label
-                            htmlFor="disabled"
+                            htmlFor="schedule-disabled"
                             className={
                               watch("scheduleScanEnabled") === false
                                 ? "text-gray-900 font-semibold"
@@ -655,13 +676,16 @@ export function CreateCloudModal() {
                       Set Scan Frequency
                     </Label>
                     <div className="text-gray-500 text-sm mb-5">
-                      Scan Schedule: <span>{schedule(watch("frequency"))}</span>
+                      Scan Schedule: <span>{schedule(frequency || "DAY")}</span>
                     </div>
                     <Controller
-                      name="frequency"
+                      name="scanScheduleSetting.frequency"
                       control={control}
                       render={({ field }) => (
-                        <Select {...field} onValueChange={field.onChange}>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select frequency" />
                           </SelectTrigger>
@@ -684,7 +708,7 @@ export function CreateCloudModal() {
                         Date
                       </Label>
                       <Controller
-                        name="date"
+                        name="scanScheduleSetting.date"
                         control={control}
                         render={({ field }) => (
                           <Select
@@ -730,7 +754,7 @@ export function CreateCloudModal() {
                         Day of Week
                       </Label>
                       <Controller
-                        name="weekday"
+                        name="scanScheduleSetting.weekday"
                         control={control}
                         render={({ field }) => (
                           <Select
@@ -780,7 +804,7 @@ export function CreateCloudModal() {
                         Hour
                       </Label>
                       <Controller
-                        name="hour"
+                        name="scanScheduleSetting.hour"
                         control={control}
                         render={({ field }) => (
                           <Select
@@ -825,10 +849,13 @@ export function CreateCloudModal() {
                         Minute
                       </Label>
                       <Controller
-                        name="minute"
+                        name="scanScheduleSetting.minute"
                         control={control}
                         render={({ field }) => (
-                          <Select {...field} onValueChange={field.onChange}>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="0" />
                             </SelectTrigger>
@@ -847,6 +874,117 @@ export function CreateCloudModal() {
                 </div>
               </>
             )}
+            <hr className="my-10 border-gray-200" />
+            <div>
+              <div>
+                <div>
+                  <Label
+                    className="mb-4 text-gray-700 font-semibold"
+                    id="eventProcessEnabledLabel"
+                  >
+                    Event Process Setting
+                  </Label>
+                  <Controller
+                    name="eventProcessEnabled"
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup
+                        className="flex gap-10"
+                        aria-labelledby="eventProcessEnabledLabel"
+                        value={field.value ? "true" : "false"}
+                        onValueChange={(value) =>
+                          field.onChange(value === "true")
+                        }
+                      >
+                        <div className="flex items-center space-x-3">
+                          <RadioGroupItem value="true" id="event-enabled" />
+                          <Label
+                            htmlFor="event-enabled"
+                            className={
+                              watch("eventProcessEnabled") === true
+                                ? "text-gray-800"
+                                : "text-gray-500"
+                            }
+                          >
+                            Enabled
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <RadioGroupItem value="false" id="event-disabled" />
+                          <Label
+                            htmlFor="event-disabled"
+                            className={
+                              watch("eventProcessEnabled") === false
+                                ? "text-gray-900 font-semibold"
+                                : "text-gray-600"
+                            }
+                          >
+                            Disabled
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+            <hr className="my-10 border-gray-200" />
+            <div>
+              <div>
+                <div>
+                  <Label
+                    className="mb-4 text-gray-700 font-semibold"
+                    id="userActivityEnabledLabel"
+                  >
+                    User Activity Setting
+                  </Label>
+                  <Controller
+                    name="userActivityEnabled"
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup
+                        className="flex gap-10"
+                        aria-labelledby="userActivityEnabledLabel"
+                        value={field.value ? "true" : "false"}
+                        onValueChange={(value) =>
+                          field.onChange(value === "true")
+                        }
+                      >
+                        <div className="flex items-center space-x-3">
+                          <RadioGroupItem value="true" id="activity-enabled" />
+                          <Label
+                            htmlFor="activity-enabled"
+                            className={
+                              watch("userActivityEnabled") === true
+                                ? "text-gray-800"
+                                : "text-gray-500"
+                            }
+                          >
+                            Enabled
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <RadioGroupItem
+                            value="false"
+                            id="activity-disabled"
+                          />
+                          <Label
+                            htmlFor="activity-disabled"
+                            className={
+                              watch("userActivityEnabled") === false
+                                ? "text-gray-900 font-semibold"
+                                : "text-gray-600"
+                            }
+                          >
+                            Disabled
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-200">

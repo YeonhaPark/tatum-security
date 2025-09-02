@@ -91,6 +91,8 @@ export { AWSRegionList };
 export type {
   Provider,
   AWSCredentialType,
+  AzureCredentialType,
+  GCPCredentialType,
   AWSCredential,
   AzureCredential,
   GCPCredential,
