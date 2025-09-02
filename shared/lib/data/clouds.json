@@ -1,28 +1,26 @@
 [
   {
-    "id": "1",
-    "name": "My AWS Cloud",
+    "id": "1756826066571",
+    "name": "AWS Dev",
     "provider": "AWS",
+    "regionList": ["global"],
     "cloudGroupName": ["AWS-Group"],
+    "scheduleScanEnabled": false,
     "eventProcessEnabled": true,
     "userActivityEnabled": true,
-    "scheduleScanEnabled": true,
-    "regionList": ["us-east-1"],
-    "scheduleScanSetting": {
+    "scanScheduleSetting": {
       "frequency": "DAY",
       "date": "1",
       "weekday": "MON",
-      "hour": "0",
+      "hour": "12",
       "minute": "0"
     },
-    "proxyUrl": null,
     "credentials": {
-      "accessKey": "my-access-key",
-      "secretAccessKey": "my-secret-key"
+      "accessKey": "accesskey",
+      "secretAccessKey": "secretkey",
+      "roleArn": ""
     },
     "credentialType": "ACCESS_KEY",
-    "eventSource": {
-      "cloudTrailName": "my-cloud-trail"
-    }
+    "proxyUrl": ""
   }
 ]
