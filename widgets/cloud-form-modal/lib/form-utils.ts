@@ -115,3 +115,22 @@ export const getFrequencyLabel = (
       return frequency;
   }
 };
+
+export const schedule = (setting: ScheduleScanSetting) => {
+  const frequency = setting?.frequency || "DAY";
+  const minute = setting?.minute || "0";
+  const hour = setting?.hour || "12";
+  const date = setting?.date || "1";
+  const weekday = setting?.weekday || "MON";
+
+  switch (frequency) {
+    case "DAY":
+      return `${getFrequencyLabel("DAY")} at ${formatTime12Hour(hour, minute)}`;
+    case "WEEK":
+      return `${getFrequencyLabel("WEEK")} on ${weekday} at ${formatTime12Hour(hour, minute)}`;
+    case "HOUR":
+      return minute === "0" ? "Every hour" : `Every hour at ${minute} minutes`;
+    case "MONTH":
+      return `${getFrequencyLabel("MONTH")} on ${date} at ${formatTime12Hour(hour, minute)}`;
+  }
+};

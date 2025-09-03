@@ -1,2 +1,12 @@
-export { CloudBasicInfoForm } from "./cloud-basic-info-form";
+export { CloudNameForm } from "./cloud-name-form";
 export { CloudFormModal } from "./cloud-form-modal";
+export { CloudProviderForm } from "./cloud-provider-form";
+export { CloudCredentialTypeForm } from "./cloud-credential-type-form";
+export { CloudCredentialsForm } from "./cloud-credentials-form";
+export { CloudRegionForm } from "./cloud-region-form";
+export { CloudProxyUrlForm } from "./cloud-proxy-url-form";
+export { CloudGroupForm } from "./cloud-group-form";
+export { CloudScanScheduleSettingForm } from "./cloud-scan-schedule-setting-form";
+export { CloudScanFrequencyForm } from "./cloud-scan-frequency-form";
+export { CloudEventProcessingForm } from "./cloud-event-processing-form";
+export { CloudUserActivityForm } from "./cloud-user-activity-form";

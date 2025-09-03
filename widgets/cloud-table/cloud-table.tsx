@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/shared/ui/dialog";
-import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { CloudFormModal } from "@/widgets/cloud-form-modal";
 
 const cols = [
@@ -189,61 +189,66 @@ export const CloudTable = () => {
         </div>
       </div>
 
-      <div className="border rounded-lg">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {cols.map((col) => (
-                <TableHead key={col.accessorKey} className="font-semibold">
-                  {col.header}
-                </TableHead>
-              ))}
-              <TableHead className="w-[100px]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {clouds.length === 0 ? (
+      <div className="border rounded-lg overflow-hidden">
+        <div className="max-h-[600px] overflow-y-auto">
+          <Table>
+            <TableHeader className="sticky top-0 bg-white z-10 border-b">
               <TableRow>
-                <TableCell
-                  colSpan={cols.length + 1}
-                  className="text-center py-8 text-gray-500"
-                >
-                  No cloud accounts configured yet
-                </TableCell>
+                {cols.map((col) => (
+                  <TableHead
+                    key={col.accessorKey}
+                    className="font-semibold bg-white"
+                  >
+                    {col.header}
+                  </TableHead>
+                ))}
+                <TableHead className="w-[100px] bg-white">Actions</TableHead>
               </TableRow>
-            ) : (
-              clouds.map((cloud: Cloud) => (
-                <TableRow key={cloud.id} className="hover:bg-gray-50">
-                  {cols.map((col) => (
-                    <TableCell key={col.accessorKey}>
-                      {renderCellValue(cloud, col.accessorKey)}
-                    </TableCell>
-                  ))}
-                  <TableCell>
-                    <div className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEdit(cloud)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(cloud)}
-                        className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+            </TableHeader>
+            <TableBody>
+              {clouds.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={cols.length + 1}
+                    className="text-center py-8 text-gray-500"
+                  >
+                    No cloud accounts configured yet
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                clouds.map((cloud: Cloud) => (
+                  <TableRow key={cloud.id} className="hover:bg-gray-50">
+                    {cols.map((col) => (
+                      <TableCell key={col.accessorKey}>
+                        {renderCellValue(cloud, col.accessorKey)}
+                      </TableCell>
+                    ))}
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEdit(cloud)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDelete(cloud)}
+                          className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       {/* Edit Modal */}

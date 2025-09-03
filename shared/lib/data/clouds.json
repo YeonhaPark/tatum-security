@@ -1,1 +1,59 @@
-[]
+[
+  {
+    "id": "1756907509117",
+    "name": "dev-1",
+    "provider": "AWS",
+    "regionList": [
+      "global"
+    ],
+    "cloudGroupName": [],
+    "scheduleScanEnabled": false,
+    "eventProcessEnabled": true,
+    "userActivityEnabled": true,
+    "scanScheduleSetting": {
+      "frequency": "DAY",
+      "date": "1",
+      "weekday": "MON",
+      "hour": "12",
+      "minute": "0"
+    },
+    "credentials": {
+      "accessKey": "123",
+      "secretAccessKey": "12323",
+      "roleArn": ""
+    },
+    "credentialType": "ACCESS_KEY",
+    "proxyUrl": "",
+    "createdAt": "2025-09-03T13:51:49.117Z",
+    "updatedAt": "2025-09-03T13:51:49.117Z"
+  },
+  {
+    "id": "1756907551945",
+    "name": "Azure-Prod",
+    "provider": "AZURE",
+    "regionList": [
+      "global"
+    ],
+    "cloudGroupName": [],
+    "scheduleScanEnabled": true,
+    "eventProcessEnabled": true,
+    "userActivityEnabled": true,
+    "scanScheduleSetting": {
+      "frequency": "DAY",
+      "date": "1",
+      "weekday": "MON",
+      "hour": "12",
+      "minute": "0"
+    },
+    "credentials": {
+      "tenantId": "tenant-id",
+      "subscriptionId": "subs-id",
+      "applicationId": "appl-id",
+      "secretKey": "secret-key"
+    },
+    "credentialType": "ACCESS_KEY",
+    "proxyUrl": "",
+    "createdAt": "2025-09-03T13:52:31.945Z",
+    "updatedAt": "2025-09-03T13:52:31.945Z"
+  }
+]
