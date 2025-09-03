@@ -9,9 +9,8 @@ export default function Home() {
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
 
   return (
-    <div className="flex min-h-full flex-col items-center justify-center p-4">
+    <div className="flex min-h-full max-w-[900px] flex-col items-center justify-center p-4">
       <Button onClick={() => setIsCloudModalOpen(true)}>
-        {" "}
         <PlusIcon className="mr-1" />
         Create Cloud
       </Button>
