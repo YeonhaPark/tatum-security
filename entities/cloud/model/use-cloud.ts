@@ -87,3 +87,20 @@ export function useUpdateCloud() {
     },
   });
 }
+
+export function useDeleteCloud() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/clouds/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete cloud");
+      return res.json();
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["clouds"] });
+    },
+  });
+}

@@ -9,9 +9,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/table";
-import { useClouds, useCloudById } from "@/entities/cloud";
+import { useClouds, useCloudById, useDeleteCloud } from "@/entities/cloud";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/shared/ui/dialog";
 import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { CloudFormModal } from "@/widgets/cloud-form-modal";
 
@@ -61,9 +68,13 @@ export const CloudTable = () => {
   const { data: clouds = [], isLoading, error } = useClouds();
   const [editingCloudId, setEditingCloudId] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [deletingCloud, setDeletingCloud] = useState<Cloud | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { data: editingCloudData, isLoading: isLoadingEditData } =
     useCloudById(editingCloudId);
+
+  const deleteCloud = useDeleteCloud();
 
   if (isLoading) {
     return (
@@ -148,8 +159,25 @@ export const CloudTable = () => {
   };
 
   const handleDelete = (cloud: Cloud) => {
-    console.log("Delete cloud:", cloud);
-    // TODO: Show delete confirmation
+    setDeletingCloud(cloud);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (deletingCloud) {
+      try {
+        await deleteCloud.mutateAsync(deletingCloud.id);
+        setIsDeleteModalOpen(false);
+        setDeletingCloud(null);
+      } catch (error) {
+        console.error("Failed to delete cloud:", error);
+      }
+    }
+  };
+
+  const cancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setDeletingCloud(null);
   };
 
   return (
@@ -228,6 +256,45 @@ export const CloudTable = () => {
           defaultValues={editingCloudData}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent
+          className="sm:max-w-[425px]"
+          aria-describedby={undefined}
+        >
+          <DialogHeader>
+            <DialogTitle>Delete Cloud Account</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-gray-600">
+              Are you sure you want to delete the cloud account{" "}
+              <span className="font-semibold">{deletingCloud?.name}</span>?
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              This action cannot be undone.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={cancelDelete}
+              disabled={deleteCloud.isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={deleteCloud.isPending}
+            >
+              {deleteCloud.isPending ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
