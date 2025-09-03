@@ -1,1 +1,1 @@
-export { useClouds, useCreateCloud } from "./use-cloud";
+export { useClouds, useCreateCloud, useCloudById, useUpdateCloud } from "./use-cloud";
