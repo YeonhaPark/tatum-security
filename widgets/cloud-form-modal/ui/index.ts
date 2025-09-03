@@ -1,2 +1,2 @@
 export { CloudBasicInfoForm } from "./cloud-basic-info-form";
-export { CreateCloudModal } from "./cloud-form-modal";
+export { CloudFormModal } from "./cloud-form-modal";

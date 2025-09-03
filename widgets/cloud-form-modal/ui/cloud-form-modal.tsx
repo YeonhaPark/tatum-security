@@ -3,16 +3,23 @@
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import {
+  Input,
+  Button,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/shared/ui/dialog";
-import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
-import { Label } from "@/shared/ui/label";
+  MultiSelect,
+  RadioGroup,
+  RadioGroupItem,
+} from "@/shared/ui";
 import {
   AWSCredential,
   AzureCredential,
@@ -20,32 +27,41 @@ import {
   ScheduleScanSetting,
   getAWSRegionOptions,
 } from "@/shared/types/clouds";
+import { getFieldEnabledState } from "../lib/form-utils";
 import { CloudFormValues } from "../model/types";
-import { PlusIcon, EyeOffIcon, EyeIcon } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
-import { MultiSelect } from "@/shared/ui/multi-select";
+import { EyeOffIcon, EyeIcon } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { formatHourTo12Hour, formatTime12Hour } from "@/shared/lib/formatter";
 import { getFrequencyLabel } from "../lib/form-utils";
-import { useCreateCloud } from "@/entities/cloud";
+import { useCreateCloud, useUpdateCloud } from "@/entities/cloud";
 
-export function CreateCloudModal() {
-  const [open, setOpen] = useState<boolean>(false);
+interface CloudFormModalProps {
+  mode?: "create" | "edit";
+  cloudId?: string;
+  defaultValues?: CloudFormValues | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export function CloudFormModal({
+  mode = "create",
+  cloudId,
+  defaultValues,
+  open,
+  onOpenChange,
+}: CloudFormModalProps) {
   const [showSecretKey, setShowSecretKey] = useState<boolean>(false);
   const [showAzureSecretKey, setShowAzureSecretKey] = useState<boolean>(false);
+
+  const isEditMode = mode === "edit";
+
   const {
     register,
     setValue,
     handleSubmit,
     control,
     watch,
+    reset,
     formState: { errors, isValid, isDirty },
   } = useForm<CloudFormValues>({
     mode: "onChange",
@@ -79,6 +95,14 @@ export function CreateCloudModal() {
   const regionList = watch("regionList");
 
   const createCloud = useCreateCloud();
+  const updateCloud = useUpdateCloud();
+
+  // Load default values for edit mode
+  useEffect(() => {
+    if (defaultValues && isEditMode && open) {
+      reset(defaultValues);
+    }
+  }, [defaultValues, isEditMode, open, reset]);
 
   // Helper function to check if all required fields are filled
   const isFormValid = () => {
@@ -114,19 +138,6 @@ export function CreateCloudModal() {
     return false;
   };
 
-  // Helper functions to determine field availability
-  const isDateFieldEnabled = () => {
-    return frequency !== "DAY" && frequency !== "WEEK" && frequency !== "HOUR";
-  };
-
-  const isHourFieldEnabled = () => {
-    return frequency !== "HOUR";
-  };
-
-  const isDayOfWeekFieldEnabled = () => {
-    return frequency !== "DAY" && frequency !== "MONTH" && frequency !== "HOUR";
-  };
-
   const schedule = (frequency: ScheduleScanSetting["frequency"]) => {
     const setting = scanScheduleSetting;
     const minute = setting?.minute || "0";
@@ -148,6 +159,11 @@ export function CreateCloudModal() {
     }
   };
   useEffect(() => {
+    // 편집 모드에서는 기존 credentials 값을 보존
+    if (isEditMode && defaultValues) {
+      return;
+    }
+
     if (provider === "AWS") {
       // AWS 기본 credential shape
       setValue("credentials", {
@@ -166,8 +182,10 @@ export function CreateCloudModal() {
     } else if (provider === "GCP") {
       setValue("credentials", { projectId: "", jsonText: "" } as GCPCredential);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [provider]);
+  }, [provider, isEditMode, setValue]);
+
+  const { isDateFieldEnabled, isDayOfWeekFieldEnabled, isHourFieldEnabled } =
+    getFieldEnabledState(frequency);
 
   const onSubmit = async (data: CloudFormValues) => {
     const cleanData = { ...data };
@@ -195,22 +213,22 @@ export function CreateCloudModal() {
       }
     }
 
-    console.log("=== PAYLOAD ===");
+    console.log(`=== ${isEditMode ? "UPDATE" : "CREATE"} PAYLOAD ===`);
     console.log("PAYLOAD:", cleanData);
-    await createCloud.mutateAsync(cleanData);
-    setOpen(false);
+
+    if (isEditMode && cloudId) {
+      await updateCloud.mutateAsync({ id: cloudId, data: cleanData });
+    } else {
+      await createCloud.mutateAsync(cleanData);
+    }
+
+    onOpenChange(false);
   };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)}>
-          <PlusIcon className="mr-1" />
-          Create Cloud
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         aria-describedby={undefined}
-        className="max-w-2xl h-[60%] flex flex-col p-0"
+        className="max-w-2xl h-[60%] min-h-[520px] flex flex-col p-0"
         onEscapeKeyDown={(e) => {
           e.preventDefault();
         }}
@@ -222,7 +240,9 @@ export function CreateCloudModal() {
         >
           <div className="flex-shrink-0 p-6 pb-0">
             <DialogHeader>
-              <DialogTitle className="text-xl">Create Cloud</DialogTitle>
+              <DialogTitle className="text-xl">
+                {isEditMode ? "Edit Cloud" : "Create Cloud"}
+              </DialogTitle>
             </DialogHeader>
           </div>
 
@@ -967,7 +987,7 @@ export function CreateCloudModal() {
                 type="button"
                 variant="outline"
                 onClick={() => {
-                  setOpen(false);
+                  onOpenChange(false);
                 }}
               >
                 Cancel
@@ -975,11 +995,11 @@ export function CreateCloudModal() {
               <Button
                 type="submit"
                 disabled={!isFormValid()}
-                className={
-                  !isFormValid() ? "opacity-50 cursor-not-allowed" : ""
-                }
+                className={cn({
+                  "opacity-50 cursor-not-allowed": !isFormValid(),
+                })}
               >
-                Submit
+                {isEditMode ? "Update" : "Submit"}
               </Button>
             </DialogFooter>
           </div>

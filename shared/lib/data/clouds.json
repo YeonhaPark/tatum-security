@@ -1,13 +1,52 @@
 [
   {
     "id": "1756826066571",
-    "name": "AWS Dev",
+    "name": "AWS Dev-modified",
     "provider": "AWS",
-    "regionList": ["global"],
-    "cloudGroupName": ["AWS-Group"],
-    "scheduleScanEnabled": false,
+    "regionList": [
+      "global"
+    ],
+    "cloudGroupName": [
+      "AWS-Group"
+    ],
+    "scheduleScanEnabled": true,
     "eventProcessEnabled": true,
     "userActivityEnabled": true,
+    "scanScheduleSetting": {
+      "frequency": "HOUR",
+      "date": "1",
+      "weekday": "MON",
+      "hour": "0",
+      "minute": "15"
+    },
+    "credentials": {
+      "accessKey": "accesskeymodified",
+      "secretAccessKey": "secretkeymodified",
+      "roleArn": "",
+      "projectId": "",
+      "jsonText": "",
+      "tenantId": "",
+      "subscriptionId": "",
+      "applicationId": "",
+      "secretKey": ""
+    },
+    "credentialType": "ACCESS_KEY",
+    "proxyUrl": "http://proxy.proxy12",
+    "updatedAt": "2025-09-03T11:17:13.726Z"
+  },
+  {
+    "id": "1756898908008",
+    "name": "Azure-Prod",
+    "provider": "AZURE",
+    "regionList": [
+      "global"
+    ],
+    "cloudGroupName": [
+      "Azure-Group"
+    ],
+    "scheduleScanEnabled": false,
+    "eventProcessEnabled": false,
+    "userActivityEnabled": false,
     "scanScheduleSetting": {
       "frequency": "DAY",
       "date": "1",
@@ -16,11 +55,14 @@
       "minute": "0"
     },
     "credentials": {
-      "accessKey": "accesskey",
-      "secretAccessKey": "secretkey",
-      "roleArn": ""
+      "tenantId": "tenant-id",
+      "subscriptionId": "subs-id",
+      "applicationId": "appl-id",
+      "secretKey": "secretazure"
     },
     "credentialType": "ACCESS_KEY",
-    "proxyUrl": ""
+    "proxyUrl": "",
+    "createdAt": "2025-09-03T11:28:28.008Z",
+    "updatedAt": "2025-09-03T11:28:28.008Z"
   }
 ]

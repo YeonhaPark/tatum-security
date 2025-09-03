@@ -18,6 +18,8 @@ export async function POST(req: Request) {
   const newItem = {
     id: String(Date.now()), // 간단한 id
     ...body,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
   data.push(newItem);

@@ -13,6 +13,7 @@ import { useClouds, useCloudById } from "@/entities/cloud";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { CloudFormModal } from "@/widgets/cloud-form-modal";
 
 const cols = [
   {
@@ -217,5 +218,16 @@ export const CloudTable = () => {
         </Table>
       </div>
 
+      {/* Edit Modal */}
+      {isEditModalOpen && editingCloudId && (
+        <CloudFormModal
+          mode="edit"
+          open={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+          cloudId={editingCloudId}
+          defaultValues={editingCloudData}
+        />
+      )}
+    </div>
   );
 };
