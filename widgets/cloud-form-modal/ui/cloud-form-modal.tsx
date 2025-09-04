@@ -33,6 +33,7 @@ import {
 } from "./index";
 
 import { getFieldEnabledState } from "../lib";
+import { CloudEventSourceForm } from "./cloud-event-source-form";
 
 interface CloudFormModalProps {
   mode?: "create" | "edit";
@@ -253,6 +254,8 @@ export function CloudFormModal({
               <CloudEventProcessingForm control={control} />
               <hr className="my-10 border-gray-200" />
               <CloudUserActivityForm control={control} />
+              <hr className="my-10 border-gray-200" />
+              <CloudEventSourceForm control={control} register={register} />
             </div>
             <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-200">
               <DialogFooter className="px-0">
