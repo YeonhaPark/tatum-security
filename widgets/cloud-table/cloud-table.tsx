@@ -126,8 +126,8 @@ export const CloudTable = () => {
             variant={value ? "default" : "secondary"}
             className={
               value
-                ? "bg-green-100 text-green-800"
-                : "bg-gray-100 text-gray-600"
+                ? "bg-green-100 text-green-800 pointer-events-none"
+                : "bg-gray-100 text-gray-600 pointer-events-none"
             }
           >
             {value ? "Enabled" : "Disabled"}
