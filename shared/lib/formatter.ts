@@ -1,5 +1,3 @@
-import { ScheduleScanSetting } from "@/shared/types/clouds";
-
 // Helper function to convert 24-hour to 12-hour format
 export const formatHourTo12Hour = (hour: string) => {
   const hourNum = parseInt(hour);
@@ -22,22 +20,4 @@ export const formatTime12Hour = (hour: string, minute: string) => {
     hourNum === 0 ? 12 : hourNum > 12 ? hourNum - 12 : hourNum;
   const ampm = hourNum < 12 ? "AM" : "PM";
   return `${displayHour}:${minuteStr.padStart(2, "0")} ${ampm}`;
-};
-
-// Helper function to convert frequency to human readable format
-export const getFrequencyLabel = (
-  frequency: ScheduleScanSetting["frequency"]
-) => {
-  switch (frequency) {
-    case "DAY":
-      return "Daily";
-    case "HOUR":
-      return "Hourly";
-    case "WEEK":
-      return "Weekly";
-    case "MONTH":
-      return "Monthly";
-    default:
-      return frequency;
-  }
 };

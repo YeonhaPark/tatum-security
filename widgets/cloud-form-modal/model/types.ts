@@ -12,6 +12,7 @@ import {
   GCPCredentialType,
   Provider,
 } from "@/shared/types/clouds";
+
 export type CloudFormValues = {
   provider: Provider;
   name: string;
@@ -23,6 +24,7 @@ export type CloudFormValues = {
   regionList: string[];
   proxyUrl?: string;
   credentials: AWSCredential | AzureCredential | GCPCredential; // GET 요쳥 시 비밀값이라 마스킹 상태로 전달됨 row 표시 ?
+  credentialType: AWSCredentialType | AzureCredentialType | GCPCredentialType; // row 표시 ?
   eventSource?: AWSEventSource | AzureEventSource | GCPEventSource; // row 표시 ?
 } & (
   | {

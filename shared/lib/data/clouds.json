@@ -1,28 +1,149 @@
 [
   {
-    "id": "1",
-    "name": "My AWS Cloud",
+    "id": "1756907509117",
+    "name": "dev-1",
     "provider": "AWS",
-    "cloudGroupName": ["AWS-Group"],
+    "regionList": [
+      "global"
+    ],
+    "cloudGroupName": [],
+    "scheduleScanEnabled": true,
     "eventProcessEnabled": true,
     "userActivityEnabled": true,
-    "scheduleScanEnabled": true,
-    "regionList": ["us-east-1"],
-    "scheduleScanSetting": {
+    "scanScheduleSetting": {
       "frequency": "DAY",
       "date": "1",
       "weekday": "MON",
-      "hour": "0",
+      "hour": "12",
       "minute": "0"
     },
-    "proxyUrl": null,
     "credentials": {
-      "accessKey": "my-access-key",
-      "secretAccessKey": "my-secret-key"
+      "accessKey": "123",
+      "secretAccessKey": "12323",
+      "roleArn": ""
     },
     "credentialType": "ACCESS_KEY",
-    "eventSource": {
-      "cloudTrailName": "my-cloud-trail"
-    }
+    "proxyUrl": "",
+    "createdAt": "2025-09-03T13:51:49.117Z",
+    "updatedAt": "2025-09-04T13:31:17.354Z"
+  },
+  {
+    "id": "1756907551945",
+    "name": "Azure-Prod",
+    "provider": "AZURE",
+    "regionList": [
+      "global",
+      "ap-northeast-2"
+    ],
+    "cloudGroupName": [],
+    "scheduleScanEnabled": true,
+    "eventProcessEnabled": true,
+    "userActivityEnabled": true,
+    "scanScheduleSetting": {
+      "frequency": "MONTH",
+      "date": "19",
+      "weekday": "MON",
+      "hour": "16",
+      "minute": "20"
+    },
+    "credentials": {
+      "tenantId": "tenant-id23",
+      "subscriptionId": "subs-id23",
+      "applicationId": "appl-id23",
+      "secretKey": "secret-key"
+    },
+    "credentialType": "ACCESS_KEY",
+    "proxyUrl": "",
+    "createdAt": "2025-09-03T13:52:31.945Z",
+    "updatedAt": "2025-09-04T14:28:50.018Z"
+  },
+  {
+    "id": "1756992625407",
+    "name": "asdfsdf",
+    "provider": "AWS",
+    "regionList": [
+      "global"
+    ],
+    "cloudGroupName": [],
+    "scheduleScanEnabled": true,
+    "eventProcessEnabled": true,
+    "userActivityEnabled": true,
+    "scanScheduleSetting": {
+      "frequency": "DAY",
+      "date": "1",
+      "weekday": "MON",
+      "hour": "12",
+      "minute": "0"
+    },
+    "credentials": {
+      "accessKey": "sdf",
+      "secretAccessKey": "sdfsd",
+      "roleArn": ""
+    },
+    "credentialType": "ACCESS_KEY",
+    "proxyUrl": "",
+    "createdAt": "2025-09-04T13:30:25.407Z",
+    "updatedAt": "2025-09-04T13:30:25.407Z"
+  },
+  {
+    "id": "1756992950026",
+    "name": "Azure QA",
+    "provider": "AZURE",
+    "regionList": [
+      "global"
+    ],
+    "cloudGroupName": [
+      "AWS-Group"
+    ],
+    "scheduleScanEnabled": true,
+    "eventProcessEnabled": true,
+    "userActivityEnabled": false,
+    "scanScheduleSetting": {
+      "frequency": "HOUR",
+      "date": "1",
+      "weekday": "MON",
+      "hour": "0",
+      "minute": "15"
+    },
+    "credentials": {
+      "tenantId": "tenant-id1",
+      "subscriptionId": "1231",
+      "applicationId": "1231",
+      "secretKey": "rwsdfasdf1"
+    },
+    "credentialType": "APPLICATION",
+    "proxyUrl": "http://proxy.proxy12",
+    "createdAt": "2025-09-04T13:35:50.026Z",
+    "updatedAt": "2025-09-04T14:31:59.857Z"
+  },
+  {
+    "id": "1756994048759",
+    "name": "New Cloud",
+    "provider": "GCP",
+    "regionList": [
+      "global",
+      "ap-northeast-3"
+    ],
+    "cloudGroupName": [
+      "GCP-Group"
+    ],
+    "scheduleScanEnabled": true,
+    "eventProcessEnabled": true,
+    "userActivityEnabled": true,
+    "scanScheduleSetting": {
+      "frequency": "HOUR",
+      "date": "1",
+      "weekday": "MON",
+      "hour": "0",
+      "minute": "10"
+    },
+    "credentials": {
+      "projectId": "google provider",
+      "jsonText": "{\"JSON\":\"TEXT\"}"
+    },
+    "credentialType": "JSON_TEXT",
+    "proxyUrl": "http://proxy.proxy12",
+    "createdAt": "2025-09-04T13:54:08.760Z",
+    "updatedAt": "2025-09-04T13:54:08.760Z"
   }
 ]
