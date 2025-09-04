@@ -11,11 +11,11 @@
     "eventProcessEnabled": true,
     "userActivityEnabled": true,
     "scanScheduleSetting": {
-      "frequency": "DAY",
+      "frequency": "WEEK",
       "date": "1",
-      "weekday": "MON",
-      "hour": "12",
-      "minute": "0"
+      "weekday": "FRI",
+      "hour": "23",
+      "minute": "5"
     },
     "credentials": {
       "accessKey": "123",
@@ -25,7 +25,8 @@
     "credentialType": "ACCESS_KEY",
     "proxyUrl": "",
     "createdAt": "2025-09-03T13:51:49.117Z",
-    "updatedAt": "2025-09-04T13:31:17.354Z"
+    "updatedAt": "2025-09-04T17:55:58.412Z",
+    "eventSource": ""
   },
   {
     "id": "1756907551945",
@@ -40,11 +41,11 @@
     "eventProcessEnabled": true,
     "userActivityEnabled": true,
     "scanScheduleSetting": {
-      "frequency": "MONTH",
-      "date": "19",
+      "frequency": "DAY",
+      "date": "1",
       "weekday": "MON",
-      "hour": "16",
-      "minute": "20"
+      "hour": "19",
+      "minute": "40"
     },
     "credentials": {
       "tenantId": "tenant-id23",
@@ -55,35 +56,8 @@
     "credentialType": "ACCESS_KEY",
     "proxyUrl": "",
     "createdAt": "2025-09-03T13:52:31.945Z",
-    "updatedAt": "2025-09-04T14:28:50.018Z"
-  },
-  {
-    "id": "1756992625407",
-    "name": "asdfsdf",
-    "provider": "AWS",
-    "regionList": [
-      "global"
-    ],
-    "cloudGroupName": [],
-    "scheduleScanEnabled": true,
-    "eventProcessEnabled": true,
-    "userActivityEnabled": true,
-    "scanScheduleSetting": {
-      "frequency": "DAY",
-      "date": "1",
-      "weekday": "MON",
-      "hour": "12",
-      "minute": "0"
-    },
-    "credentials": {
-      "accessKey": "sdf",
-      "secretAccessKey": "sdfsd",
-      "roleArn": ""
-    },
-    "credentialType": "ACCESS_KEY",
-    "proxyUrl": "",
-    "createdAt": "2025-09-04T13:30:25.407Z",
-    "updatedAt": "2025-09-04T13:30:25.407Z"
+    "updatedAt": "2025-09-04T17:54:06.043Z",
+    "eventSource": ""
   },
   {
     "id": "1756992950026",
@@ -145,5 +119,66 @@
     "proxyUrl": "http://proxy.proxy12",
     "createdAt": "2025-09-04T13:54:08.760Z",
     "updatedAt": "2025-09-04T13:54:08.760Z"
+  },
+  {
+    "id": "1756997838262",
+    "name": "AWS QA",
+    "provider": "AWS",
+    "regionList": [
+      "global"
+    ],
+    "cloudGroupName": [],
+    "scheduleScanEnabled": false,
+    "eventProcessEnabled": false,
+    "userActivityEnabled": false,
+    "scanScheduleSetting": {
+      "frequency": "DAY",
+      "date": "1",
+      "weekday": "MON",
+      "hour": "0",
+      "minute": "0"
+    },
+    "credentials": {
+      "accessKey": "awsqa",
+      "secretAccessKey": "awsqa",
+      "roleArn": ""
+    },
+    "credentialType": "ACCESS_KEY",
+    "proxyUrl": "",
+    "eventSource": "",
+    "createdAt": "2025-09-04T14:57:18.262Z",
+    "updatedAt": "2025-09-04T18:01:15.290Z"
+  },
+  {
+    "id": "1756992625407",
+    "name": "asdfsdf",
+    "provider": "AWS",
+    "regionList": [
+      "global"
+    ],
+    "cloudGroupName": [
+      "GCP-Group",
+      "AWS-Group"
+    ],
+    "scheduleScanEnabled": true,
+    "eventProcessEnabled": true,
+    "userActivityEnabled": true,
+    "scanScheduleSetting": {
+      "frequency": "WEEK",
+      "date": "1",
+      "weekday": "MON",
+      "hour": "22",
+      "minute": "0"
+    },
+    "credentials": {
+      "accessKey": "sssss",
+      "secretAccessKey": "ssss",
+      "roleArn": "ssss"
+    },
+    "credentialType": "ACCESS_KEY",
+    "proxyUrl": "",
+    "createdAt": "2025-09-04T17:09:43.509Z",
+    "updatedAt": "2025-09-04T17:58:47.518Z",
+    "eventSource": ""
   }
 ]

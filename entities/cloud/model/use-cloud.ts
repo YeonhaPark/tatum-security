@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CloudFormValues } from "@/widgets/cloud-form-modal/model/types";
+import {
+  CloudFormValues,
+  UpdateCloudPayload,
+} from "@/widgets/cloud-form-modal/model/types";
 
 export function useClouds() {
   return useQuery({
@@ -50,7 +53,13 @@ export function useUpdateCloud() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: CloudFormValues }) => {
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: UpdateCloudPayload;
+    }) => {
       const res = await fetch(`/api/clouds/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
