@@ -73,7 +73,6 @@ export const CloudTable = () => {
 
   const { data: editingCloudData, isLoading: isLoadingEditData } =
     useCloudById(editingCloudId);
-
   const deleteCloud = useDeleteCloud();
 
   if (isLoading) {
@@ -103,13 +102,17 @@ export const CloudTable = () => {
           </Badge>
         );
 
-      case "cloudGroupName":
+      case "cloudGroupName": {
         const groups = value as string[] | undefined;
         if (!groups || groups.length === 0) {
-          return <span className="text-gray-400">-</span>;
+          return (
+            <div className="flex gap-1 flex-wrap">
+              <span className="text-gray-400">-</span>
+            </div>
+          );
         }
         return (
-          <div className="flex gap-1 flex-wrap">
+          <div className="flex gap-1 flex-wrap ">
             {groups.map((group, index) => (
               <Badge key={index} variant="secondary" className="text-xs">
                 {group}
@@ -117,7 +120,7 @@ export const CloudTable = () => {
             ))}
           </div>
         );
-
+      }
       case "scheduleScanEnabled":
       case "eventProcessEnabled":
       case "userActivityEnabled":
@@ -151,11 +154,6 @@ export const CloudTable = () => {
   const handleEdit = (cloud: Cloud) => {
     setEditingCloudId(cloud.id);
     setIsEditModalOpen(true);
-  };
-
-  const handleCloseEditModal = () => {
-    setIsEditModalOpen(false);
-    setEditingCloudId(null);
   };
 
   const handleDelete = (cloud: Cloud) => {
@@ -230,8 +228,15 @@ export const CloudTable = () => {
                           size="sm"
                           onClick={() => handleEdit(cloud)}
                           className="h-8 w-8 p-0"
+                          disabled={
+                            isLoadingEditData && editingCloudId === cloud.id
+                          }
                         >
-                          <Edit className="h-4 w-4" />
+                          {isLoadingEditData && editingCloudId === cloud.id ? (
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600"></div>
+                          ) : (
+                            <Edit className="h-4 w-4" />
+                          )}
                         </Button>
                         <Button
                           variant="ghost"
@@ -258,7 +263,7 @@ export const CloudTable = () => {
           open={isEditModalOpen}
           onOpenChange={setIsEditModalOpen}
           cloudId={editingCloudId}
-          defaultValues={editingCloudData}
+          defaultValues={isLoadingEditData ? null : editingCloudData}
         />
       )}
 

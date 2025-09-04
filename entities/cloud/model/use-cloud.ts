@@ -30,31 +30,6 @@ export function useCreateCloud() {
 
   return useMutation({
     mutationFn: async (input: CloudFormValues) => {
-      //         {
-      //     "name": "Dev1",
-      //     "provider": "AWS",
-      //     "regionList": [
-      //         "global"
-      //     ],
-      //     "cloudGroupName": [],
-      //     "scheduleScanEnabled": true,
-      //     "eventProcessEnabled": true,
-      //     "userActivityEnabled": true,
-      //     "scanScheduleSetting": {
-      //         "frequency": "DAY",
-      //         "date": "1",
-      //         "weekday": "MON",
-      //         "hour": "12",
-      //         "minute": "0"
-      //     },
-      //     "credentials": {
-      //         "accessKey": "123",
-      //         "secretAccessKey": "123",
-      //         "roleArn": ""
-      //     },
-      //     "credentialType": "ACCESS_KEY",
-      //     "proxyUrl": ""
-      // }
       const res = await fetch("/api/clouds", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -64,7 +39,9 @@ export function useCreateCloud() {
       return res.json();
     },
     onSuccess: () => {
+      // 모든 cloud 관련 쿼리 무효화
       qc.invalidateQueries({ queryKey: ["clouds"] });
+      qc.invalidateQueries({ queryKey: ["cloud"] });
     },
   });
 }
@@ -82,8 +59,10 @@ export function useUpdateCloud() {
       if (!res.ok) throw new Error("Failed to update cloud");
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      // 모든 cloud 관련 쿼리 무효화 (더 안전한 방법)
       qc.invalidateQueries({ queryKey: ["clouds"] });
+      qc.invalidateQueries({ queryKey: ["cloud"] });
     },
   });
 }
@@ -99,8 +78,10 @@ export function useDeleteCloud() {
       if (!res.ok) throw new Error("Failed to delete cloud");
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: (data, id) => {
+      // 모든 cloud 관련 쿼리 무효화
       qc.invalidateQueries({ queryKey: ["clouds"] });
+      qc.invalidateQueries({ queryKey: ["cloud"] });
     },
   });
 }

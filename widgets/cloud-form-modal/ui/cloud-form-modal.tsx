@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import {
   Button,
   Dialog,
@@ -42,6 +42,25 @@ interface CloudFormModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
+const BASE_VALUES: CloudFormValues = {
+  name: "",
+  provider: "AWS",
+  regionList: ["global"],
+  cloudGroupName: [],
+  scheduleScanEnabled: false,
+  eventProcessEnabled: false,
+  userActivityEnabled: false,
+  scanScheduleSetting: {
+    frequency: "DAY",
+    date: "1",
+    weekday: "MON",
+    hour: "0",
+    minute: "0",
+  },
+  credentials: { accessKey: "", secretAccessKey: "" },
+  credentialType: "ACCESS_KEY",
+  proxyUrl: "",
+};
 export function CloudFormModal({
   mode = "create",
   cloudId,
@@ -50,7 +69,18 @@ export function CloudFormModal({
   onOpenChange,
 }: CloudFormModalProps) {
   const isEditMode = mode === "edit";
-
+  const ready = !isEditMode || !!defaultValues;
+  const mergedValues = useMemo<CloudFormValues>(() => {
+    if (!isEditMode || !defaultValues) return BASE_VALUES;
+    return {
+      ...BASE_VALUES,
+      ...defaultValues,
+      scanScheduleSetting: {
+        ...BASE_VALUES.scanScheduleSetting,
+        ...defaultValues.scanScheduleSetting,
+      },
+    };
+  }, [isEditMode, defaultValues]);
   const {
     register,
     setValue,
@@ -58,30 +88,10 @@ export function CloudFormModal({
     control,
     watch,
     reset,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<CloudFormValues>({
-    mode: "onSubmit",
-    defaultValues: {
-      name: "",
-      provider: "AWS",
-      regionList: ["global"],
-      cloudGroupName: [],
-      scheduleScanEnabled: true,
-      eventProcessEnabled: true,
-      userActivityEnabled: true,
-      scanScheduleSetting: {
-        frequency: "DAY",
-        date: "1",
-        weekday: "MON",
-        hour: "12",
-        minute: "0",
-      },
-      credentials: {
-        accessKey: "",
-        secretAccessKey: "",
-      },
-      credentialType: "ACCESS_KEY",
-    } as CloudFormValues,
+    mode: "onChange",
+    values: ready ? mergedValues : BASE_VALUES,
   });
   const provider = watch("provider");
 
@@ -90,25 +100,39 @@ export function CloudFormModal({
 
   // Load default values for edit mode
   useEffect(() => {
-    if (defaultValues && isEditMode && open) {
-      reset(defaultValues);
+    if (isEditMode && defaultValues && open) {
+      const completeValues = {
+        ...BASE_VALUES,
+        ...defaultValues,
+        scanScheduleSetting: {
+          ...BASE_VALUES.scanScheduleSetting,
+          ...defaultValues.scanScheduleSetting,
+        },
+      } as CloudFormValues;
+      console.log({ completeValues });
+
+      setTimeout(() => {
+        reset(completeValues);
+      }, 0);
+    } else if (!isEditMode && open) {
+      // Create 모드일 때는 항상 폼을 초기화
+      reset(BASE_VALUES as CloudFormValues);
     }
   }, [defaultValues, isEditMode, open, reset]);
 
   useEffect(() => {
-    // 편집 모드에서는 기존 credentials 값을 보존
-    if (isEditMode && defaultValues) {
+    if (isEditMode) {
       return;
     }
 
+    // Create 모드이거나 provider가 변경된 경우 credentials 초기화
     if (provider === "AWS") {
-      // AWS 기본 credential shape
       setValue("credentials", {
         accessKey: "",
         secretAccessKey: "",
         roleArn: "",
       } as AWSCredential);
-      // keyRegistrationMethod 기본값도 보장
+      setValue("credentialType", "ACCESS_KEY");
     } else if (provider === "AZURE") {
       setValue("credentials", {
         tenantId: "",
@@ -116,10 +140,12 @@ export function CloudFormModal({
         applicationId: "",
         secretKey: "",
       } as AzureCredential);
+      setValue("credentialType", "APPLICATION");
     } else if (provider === "GCP") {
       setValue("credentials", { projectId: "", jsonText: "" } as GCPCredential);
+      setValue("credentialType", "JSON_TEXT");
     }
-  }, [provider, isEditMode, setValue]);
+  }, [provider, isEditMode, defaultValues, setValue]);
 
   const onSubmit = async (data: CloudFormValues) => {
     const cleanData = { ...data };
@@ -170,69 +196,92 @@ export function CloudFormModal({
         }}
         onPointerDownOutside={(e) => e.preventDefault()}
       >
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col h-full"
-        >
-          <div className="flex-shrink-0 p-6 pb-0">
-            <DialogHeader>
-              <DialogTitle className="text-xl">
-                {isEditMode ? "Edit Cloud" : "Create Cloud"}
-              </DialogTitle>
-            </DialogHeader>
-          </div>
-          <div className="flex-1 overflow-y-auto p-6 pt-6">
-            <div className="space-y-6">
-              <CloudNameForm register={register} errors={errors} />
-              <CloudProviderForm control={control} />
-              <CloudCredentialTypeForm control={control} />
+        {/* Edit 모드에서 데이터 로딩 중일 때 로딩 UI */}
+        {isEditMode && !defaultValues ? (
+          <>
+            <div className="flex-shrink-0 p-6 pb-0">
+              <DialogHeader>
+                <DialogTitle className="text-xl">
+                  {isEditMode ? "Edit Cloud" : "Create Cloud"}
+                </DialogTitle>
+              </DialogHeader>
             </div>
-            <hr className="my-10 border-gray-200" />
-            <div>
-              <div className="space-y-6">
-                <CloudCredentialsForm register={register} control={control} />
+            <div className="flex flex-col h-full items-center justify-center">
+              <div className="flex items-center gap-3">
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+                <span className="text-gray-600">Loading cloud data...</span>
               </div>
             </div>
-            <hr className="my-10 border-gray-200" />
-            <div>
-              <div className="space-y-6">
-                <CloudRegionForm control={control} />
-                <CloudProxyUrlForm register={register} />
-              </div>
+          </>
+        ) : (
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col h-full"
+          >
+            <div className="flex-shrink-0 p-6 pb-0">
+              <DialogHeader>
+                <DialogTitle className="text-xl">
+                  {isEditMode ? "Edit Cloud" : "Create Cloud"}
+                </DialogTitle>
+              </DialogHeader>
             </div>
-            <hr className="my-10 border-gray-200" />
-            <CloudGroupForm control={control} />
-            <hr className="my-10 border-gray-200" />
-            <CloudScanScheduleSettingForm control={control} />
-            <CloudScanFrequencyForm control={control} />
-            <hr className="my-10 border-gray-200" />
-            <CloudEventProcessingForm control={control} />
-            <hr className="my-10 border-gray-200" />
-            <CloudUserActivityForm control={control} />
-          </div>
-          <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-200">
-            <DialogFooter className="px-0">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  onOpenChange(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={!isValid}
-                className={cn({
-                  "opacity-50 cursor-not-allowed": !isValid,
-                })}
-              >
-                {isEditMode ? "Update" : "Submit"}
-              </Button>
-            </DialogFooter>
-          </div>
-        </form>
+            <div className="flex-1 overflow-y-auto p-6 pt-6">
+              <div className="space-y-6">
+                <CloudNameForm register={register} errors={errors} />
+                <CloudProviderForm control={control} />
+                <CloudCredentialTypeForm control={control} />
+              </div>
+              <hr className="my-10 border-gray-200" />
+              <div>
+                <div className="space-y-6">
+                  <CloudCredentialsForm register={register} control={control} />
+                </div>
+              </div>
+              <hr className="my-10 border-gray-200" />
+              <div>
+                <div className="space-y-6">
+                  <CloudRegionForm control={control} />
+                  <CloudProxyUrlForm register={register} />
+                </div>
+              </div>
+              <hr className="my-10 border-gray-200" />
+              <CloudGroupForm control={control} />
+              <hr className="my-10 border-gray-200" />
+              <CloudScanScheduleSettingForm control={control} />
+              <CloudScanFrequencyForm control={control} />
+              <hr className="my-10 border-gray-200" />
+              <CloudEventProcessingForm control={control} />
+              <hr className="my-10 border-gray-200" />
+              <CloudUserActivityForm control={control} />
+            </div>
+            <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-200">
+              <DialogFooter className="px-0">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    onOpenChange(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={!isValid || isSubmitting}
+                  className={cn({
+                    "opacity-50 cursor-not-allowed": !isValid || isSubmitting,
+                  })}
+                >
+                  {isSubmitting
+                    ? "Submitting..."
+                    : isEditMode
+                      ? "Update"
+                      : "Submit"}
+                </Button>
+              </DialogFooter>
+            </div>
+          </form>
+        )}
       </DialogContent>
     </Dialog>
   );

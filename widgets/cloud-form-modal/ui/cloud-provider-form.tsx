@@ -14,7 +14,6 @@ interface CloudProviderFormProps {
 }
 
 export const CloudProviderForm = ({ control }: CloudProviderFormProps) => {
-  console.log({ control });
   return (
     <div>
       <Label
@@ -28,7 +27,7 @@ export const CloudProviderForm = ({ control }: CloudProviderFormProps) => {
         name="provider"
         control={control}
         render={({ field }) => (
-          <Select {...field} onValueChange={field.onChange}>
+          <Select value={field.value} onValueChange={field.onChange}>
             <SelectTrigger id="provider" aria-labelledby="providerLabel">
               <SelectValue placeholder="Select a provider" />
             </SelectTrigger>
