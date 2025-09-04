@@ -18,6 +18,7 @@ export function CloudNameForm({ register, errors }: CloudNameFormProps) {
         id="name"
         placeholder="Please enter the cloud name."
         {...register("name", { required: true })}
+        autoFocus={false}
       />
       {errors.name && (
         <p className="text-sm mt-2 text-red-500">Cloud name is required.</p>
