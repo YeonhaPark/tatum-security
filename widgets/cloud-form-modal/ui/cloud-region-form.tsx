@@ -8,7 +8,7 @@ interface CloudRegionFormProps {
 export const CloudRegionForm = ({ control }: CloudRegionFormProps) => {
   return (
     <div>
-      <Label className="mb-3 text-gray-700 font-semibold" htmlFor="regionLabel">
+      <Label className="mb-3 text-gray-700 font-semibold" id="regionListLabel">
         Region
       </Label>
       <Controller
@@ -21,6 +21,7 @@ export const CloudRegionForm = ({ control }: CloudRegionFormProps) => {
             onChange={field.onChange}
             placeholder="Select regions..."
             className="w-full"
+            aria-labelledby="regionListLabel"
           />
         )}
       />
