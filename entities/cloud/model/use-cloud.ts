@@ -34,7 +34,7 @@ export function useCreateCloud() {
   return useMutation({
     mutationFn: async (input: CloudFormValues) => {
       const res = await fetch("/api/clouds", {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(input),
       });
