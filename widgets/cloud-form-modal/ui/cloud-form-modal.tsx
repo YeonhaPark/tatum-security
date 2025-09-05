@@ -237,9 +237,8 @@ export function CloudFormModal({
       }
       console.log("UPDATE PAYLOAD ===\n", patch);
       await updateCloud.mutateAsync({ id: cloudId, data: patch });
-
-      onOpenChange(false);
     }
+    onOpenChange(false);
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

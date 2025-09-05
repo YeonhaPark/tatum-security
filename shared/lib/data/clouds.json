@@ -33,70 +33,6 @@
     }
   },
   {
-    "id": "1756992950026",
-    "name": "Azure QA",
-    "provider": "AZURE",
-    "regionList": [
-      "global"
-    ],
-    "cloudGroupName": [
-      "AWS-Group"
-    ],
-    "scheduleScanEnabled": true,
-    "eventProcessEnabled": true,
-    "userActivityEnabled": false,
-    "scanScheduleSetting": {
-      "frequency": "HOUR",
-      "date": "1",
-      "weekday": "MON",
-      "hour": "0",
-      "minute": "15"
-    },
-    "credentials": {
-      "tenantId": "tenant-id1",
-      "subscriptionId": "1231",
-      "applicationId": "1231",
-      "secretKey": "rwsdfasdf1"
-    },
-    "credentialType": "APPLICATION",
-    "proxyUrl": "http://proxy.proxy12",
-    "createdAt": "2025-09-04T13:35:50.026Z",
-    "updatedAt": "2025-09-05T03:59:27.358Z",
-    "eventSource": {
-      "storageAccountName": "azure"
-    }
-  },
-  {
-    "id": "1756994048759",
-    "name": "New Cloud",
-    "provider": "GCP",
-    "regionList": [
-      "global",
-      "ap-northeast-3"
-    ],
-    "cloudGroupName": [
-      "GCP-Group"
-    ],
-    "scheduleScanEnabled": true,
-    "eventProcessEnabled": true,
-    "userActivityEnabled": true,
-    "scanScheduleSetting": {
-      "frequency": "HOUR",
-      "date": "1",
-      "weekday": "MON",
-      "hour": "0",
-      "minute": "10"
-    },
-    "credentials": {
-      "projectId": "google provider",
-      "jsonText": "{\"JSON\":\"TEXT\"}"
-    },
-    "credentialType": "JSON_TEXT",
-    "proxyUrl": "http://proxy.proxy12",
-    "createdAt": "2025-09-04T13:54:08.760Z",
-    "updatedAt": "2025-09-04T13:54:08.760Z"
-  },
-  {
     "id": "1756997838262",
     "name": "AWS QA",
     "provider": "AWS",
@@ -126,7 +62,7 @@
   },
   {
     "id": "1756992625407",
-    "name": "asdfsdf",
+    "name": "DEV AWS",
     "provider": "AWS",
     "regionList": [
       "global"
@@ -153,12 +89,15 @@
     "credentialType": "ACCESS_KEY",
     "proxyUrl": "",
     "createdAt": "2025-09-04T17:09:43.509Z",
-    "updatedAt": "2025-09-04T17:58:47.518Z"
+    "updatedAt": "2025-09-05T04:02:03.633Z",
+    "eventSource": {
+      "cloudTrailName": ""
+    }
   },
   {
-    "id": "1757042758744",
-    "name": "Azure PROD",
-    "provider": "AZURE",
+    "id": "1757044849805",
+    "name": "RESEARCH",
+    "provider": "AWS",
     "regionList": [
       "global"
     ],
@@ -174,20 +113,22 @@
       "minute": "0"
     },
     "credentials": {
-      "tenantId": "tenant-id23",
-      "subscriptionId": "subs-id23",
-      "applicationId": "1231",
-      "secretKey": "12tdgsdf"
+      "accessKey": "222",
+      "secretAccessKey": "ttt",
+      "roleArn": ""
     },
-    "credentialType": "APPLICATION",
+    "credentialType": "ACCESS_KEY",
     "proxyUrl": "",
-    "createdAt": "2025-09-05T03:25:58.744Z",
-    "updatedAt": "2025-09-05T03:25:58.744Z"
+    "eventSource": {
+      "cloudTrailName": ""
+    },
+    "createdAt": "2025-09-05T04:00:49.805Z",
+    "updatedAt": "2025-09-05T04:02:33.688Z"
   },
   {
-    "id": "1757042852834",
-    "name": "azure 1",
-    "provider": "AZURE",
+    "id": "1757044876342",
+    "name": "create test 2",
+    "provider": "AWS",
     "regionList": [
       "global"
     ],
@@ -203,14 +144,16 @@
       "minute": "0"
     },
     "credentials": {
-      "tenantId": "123",
-      "subscriptionId": "12",
-      "applicationId": "drfsd",
-      "secretKey": "sdfsdf"
+      "accessKey": "123",
+      "secretAccessKey": "123",
+      "roleArn": ""
     },
-    "credentialType": "APPLICATION",
+    "credentialType": "ACCESS_KEY",
     "proxyUrl": "",
-    "createdAt": "2025-09-05T03:27:32.834Z",
-    "updatedAt": "2025-09-05T03:27:32.834Z"
+    "eventSource": {
+      "cloudTrailName": ""
+    },
+    "createdAt": "2025-09-05T04:01:16.342Z",
+    "updatedAt": "2025-09-05T04:01:16.342Z"
   }
 ]
