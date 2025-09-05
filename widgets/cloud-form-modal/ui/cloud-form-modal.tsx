@@ -164,7 +164,7 @@ export function CloudFormModal({
       setValue("credentials", { projectId: "", jsonText: "" } as GCPCredential);
       setValue("credentialType", "JSON_TEXT");
     }
-  }, [provider, isEditMode, defaultValues, setValue]);
+  }, [provider, isEditMode, setValue]);
 
   const handleChangeCredentials = () => {
     setChangeCreds(true);
@@ -195,7 +195,6 @@ export function CloudFormModal({
   const onSubmit = async (data: CloudFormValues) => {
     const cleanData = { ...data };
     const scanScheduleSetting = watch("scanScheduleSetting");
-
     const { isDateFieldEnabled, isDayOfWeekFieldEnabled, isHourFieldEnabled } =
       getFieldEnabledState(scanScheduleSetting.frequency);
 
@@ -222,20 +221,21 @@ export function CloudFormModal({
       }
     }
 
-    console.log(`=== ${isEditMode ? "UPDATE" : "CREATE"} PAYLOAD ===`);
-    console.log("PAYLOAD:", cleanData);
-
     if (!isEditMode) {
-      // Create 모드
+      console.log("CREATE PAYLOAD ===\n", cleanData);
       await createCloud.mutateAsync(cleanData);
     } else if (cloudId) {
       const { credentials: _c, credentialType: _t, ...rest } = cleanData;
       const patch: UpdateCloudPayload = { ...rest };
+
+      patch.credentialType = mustReenterSecrets
+        ? cleanData.credentialType
+        : (defaultValues?.credentialType ?? cleanData.credentialType);
+
       if (mustReenterSecrets) {
         patch.credentials = cleanData.credentials;
-        patch.credentialType = cleanData.credentialType;
       }
-
+      console.log("UPDATE PAYLOAD ===\n", patch);
       await updateCloud.mutateAsync({ id: cloudId, data: patch });
 
       onOpenChange(false);

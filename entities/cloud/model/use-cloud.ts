@@ -4,6 +4,26 @@ import {
   UpdateCloudPayload,
 } from "@/widgets/cloud-form-modal/model/types";
 
+// Deep merge utility function
+function deepMerge(target: any, source: any): any {
+  if (typeof target !== 'object' || target === null) return source;
+  if (typeof source !== 'object' || source === null) return target;
+
+  const result = { ...target };
+
+  for (const key in source) {
+    if (source.hasOwnProperty(key)) {
+      if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
+        result[key] = deepMerge(target[key], source[key]);
+      } else {
+        result[key] = source[key];
+      }
+    }
+  }
+
+  return result;
+}
+
 export function useClouds() {
   return useQuery({
     queryKey: ["clouds"],
@@ -60,10 +80,19 @@ export function useUpdateCloud() {
       id: string;
       data: UpdateCloudPayload;
     }) => {
+      // 먼저 기존 데이터를 가져옴
+      const existingRes = await fetch(`/api/clouds/${id}`);
+      if (!existingRes.ok) throw new Error("Failed to fetch existing cloud data");
+      const existingData = await existingRes.json();
+
+      // Deep merge를 사용하여 기존 데이터와 새 데이터를 병합
+      const mergedData = deepMerge(existingData, data);
+
+      // 병합된 데이터를 서버로 전송
       const res = await fetch(`/api/clouds/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(mergedData),
       });
       if (!res.ok) throw new Error("Failed to update cloud");
       return res.json();

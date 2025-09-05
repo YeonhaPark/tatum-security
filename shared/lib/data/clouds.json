@@ -1,12 +1,14 @@
 [
   {
     "id": "1756907509117",
-    "name": "dev-1",
+    "name": "dev-3",
     "provider": "AWS",
     "regionList": [
       "global"
     ],
-    "cloudGroupName": [],
+    "cloudGroupName": [
+      "AWS-Group"
+    ],
     "scheduleScanEnabled": true,
     "eventProcessEnabled": true,
     "userActivityEnabled": true,
@@ -25,38 +27,7 @@
     "credentialType": "ACCESS_KEY",
     "proxyUrl": "",
     "createdAt": "2025-09-03T13:51:49.117Z",
-    "updatedAt": "2025-09-04T17:55:58.412Z",
-    "eventSource": ""
-  },
-  {
-    "id": "1756907551945",
-    "name": "Azure-Prod",
-    "provider": "AZURE",
-    "regionList": [
-      "global",
-      "ap-northeast-2"
-    ],
-    "cloudGroupName": [],
-    "scheduleScanEnabled": true,
-    "eventProcessEnabled": true,
-    "userActivityEnabled": true,
-    "scanScheduleSetting": {
-      "frequency": "DAY",
-      "date": "1",
-      "weekday": "MON",
-      "hour": "19",
-      "minute": "40"
-    },
-    "credentials": {
-      "tenantId": "tenant-id23",
-      "subscriptionId": "subs-id23",
-      "applicationId": "appl-id23",
-      "secretKey": "secret-key"
-    },
-    "credentialType": "ACCESS_KEY",
-    "proxyUrl": "",
-    "createdAt": "2025-09-03T13:52:31.945Z",
-    "updatedAt": "2025-09-04T17:54:06.043Z",
+    "updatedAt": "2025-09-05T03:20:52.851Z",
     "eventSource": ""
   },
   {
@@ -180,5 +151,65 @@
     "createdAt": "2025-09-04T17:09:43.509Z",
     "updatedAt": "2025-09-04T17:58:47.518Z",
     "eventSource": ""
+  },
+  {
+    "id": "1757042758744",
+    "name": "Azure PROD",
+    "provider": "AZURE",
+    "regionList": [
+      "global"
+    ],
+    "cloudGroupName": [],
+    "scheduleScanEnabled": false,
+    "eventProcessEnabled": false,
+    "userActivityEnabled": false,
+    "scanScheduleSetting": {
+      "frequency": "DAY",
+      "date": "1",
+      "weekday": "MON",
+      "hour": "0",
+      "minute": "0"
+    },
+    "credentials": {
+      "tenantId": "tenant-id23",
+      "subscriptionId": "subs-id23",
+      "applicationId": "1231",
+      "secretKey": "12tdgsdf"
+    },
+    "credentialType": "APPLICATION",
+    "proxyUrl": "",
+    "eventSource": "",
+    "createdAt": "2025-09-05T03:25:58.744Z",
+    "updatedAt": "2025-09-05T03:25:58.744Z"
+  },
+  {
+    "id": "1757042852834",
+    "name": "azure 1",
+    "provider": "AZURE",
+    "regionList": [
+      "global"
+    ],
+    "cloudGroupName": [],
+    "scheduleScanEnabled": false,
+    "eventProcessEnabled": false,
+    "userActivityEnabled": false,
+    "scanScheduleSetting": {
+      "frequency": "DAY",
+      "date": "1",
+      "weekday": "MON",
+      "hour": "0",
+      "minute": "0"
+    },
+    "credentials": {
+      "tenantId": "123",
+      "subscriptionId": "12",
+      "applicationId": "drfsd",
+      "secretKey": "sdfsdf"
+    },
+    "credentialType": "APPLICATION",
+    "proxyUrl": "",
+    "eventSource": "",
+    "createdAt": "2025-09-05T03:27:32.834Z",
+    "updatedAt": "2025-09-05T03:27:32.834Z"
   }
 ]
