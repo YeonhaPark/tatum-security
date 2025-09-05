@@ -57,11 +57,8 @@ tatum-security/
 ### UI & Styling
 
 - **Tailwind CSS 4** - 유틸리티 우선 CSS 프레임워크
-- **Radix UI** - 접근 가능한 헤드리스 UI 컴포넌트
+- **Shadcn UI** - 접근 가능한 헤드리스 UI 컴포넌트
   - Dialog, Select, Label, Popover, Radio Group 등
-- **Lucide React** - 아이콘 라이브러리
-- **class-variance-authority (CVA)** - 조건부 CSS 클래스 관리
-- **clsx & tailwind-merge** - 클래스명 조합 및 최적화
 
 ### State Management & Data Fetching
 
@@ -73,15 +70,6 @@ tatum-security/
 
 - **ESLint** - 코드 품질 검사
 - **Prettier** - 코드 포맷팅
-- **pnpm** - 빠르고 효율적인 패키지 매니저
-
-### Additional Libraries
-
-- **date-fns** - 날짜 조작 라이브러리
-- **react-day-picker** - 날짜 선택 컴포넌트
-- **next-themes** - 다크/라이트 모드 지원
-- **sonner** - 토스트 알림
-- **cmdk** - 명령 팔레트 UI
 
 ## 🏗 FSD (Feature-Sliced Design) 패턴을 선택한 이유
 
