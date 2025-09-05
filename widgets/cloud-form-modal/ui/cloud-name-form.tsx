@@ -22,12 +22,6 @@ export function CloudNameForm({ register, errors }: CloudNameFormProps) {
     e.preventDefault();
   };
 
-  const handleSelect = (e: React.SyntheticEvent<HTMLInputElement>) => {
-    // 선택 이벤트 발생 시 커서를 맨 끝으로 이동
-    const target = e.target as HTMLInputElement;
-    target.setSelectionRange(target.value.length, target.value.length);
-  };
-
   return (
     <div>
       <Label className="mb-3 text-gray-700 font-semibold" htmlFor="name">
@@ -40,7 +34,6 @@ export function CloudNameForm({ register, errors }: CloudNameFormProps) {
         autoFocus={false}
         onFocus={handleFocus}
         onMouseUp={handleMouseUp}
-        onSelect={handleSelect}
       />
       {errors.name && (
         <p className="text-sm mt-2 text-red-500">Cloud name is required.</p>
