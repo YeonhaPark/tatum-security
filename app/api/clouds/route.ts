@@ -10,7 +10,7 @@ export async function GET() {
   return NextResponse.json(data);
 }
 
-export async function POST(req: Request) {
+export async function PUT(req: Request) {
   const body = await req.json();
   const json = fs.readFileSync(dataFile, "utf-8");
   const data = JSON.parse(json);

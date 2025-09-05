@@ -4,6 +4,26 @@ import path from "path";
 
 const dataFile = path.join(process.cwd(), "shared/lib/data/clouds.json");
 
+// Deep merge utility function
+function deepMerge(target: any, source: any): any {
+  if (typeof target !== 'object' || target === null) return source;
+  if (typeof source !== 'object' || source === null) return target;
+
+  const result = { ...target };
+
+  for (const key in source) {
+    if (source.hasOwnProperty(key)) {
+      if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
+        result[key] = deepMerge(target[key], source[key]);
+      } else {
+        result[key] = source[key];
+      }
+    }
+  }
+
+  return result;
+}
+
 // GET /api/clouds/[id] - 특정 ID의 클라우드 데이터 조회
 export async function GET(
   request: NextRequest,
@@ -53,13 +73,12 @@ export async function PATCH(
       return NextResponse.json({ error: "Cloud not found" }, { status: 404 });
     }
 
-    // 데이터 업데이트
-    const updatedCloud = {
-      ...data[cloudIndex],
+    // 데이터 업데이트 - Deep merge를 사용하여 중첩 객체 보존
+    const updatedCloud = deepMerge(data[cloudIndex], {
       ...body,
       id: id, // ID는 변경하지 않음
       updatedAt: new Date().toISOString(),
-    };
+    });
 
     data[cloudIndex] = updatedCloud;
 

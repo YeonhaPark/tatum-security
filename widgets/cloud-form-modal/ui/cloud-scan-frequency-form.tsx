@@ -28,7 +28,7 @@ export const CloudScanFrequencyForm = ({
     name: "scanScheduleSetting",
   });
   const { isDateFieldEnabled, isDayOfWeekFieldEnabled, isHourFieldEnabled } =
-    getFieldEnabledState(scanScheduleSetting.frequency);
+    getFieldEnabledState(scanScheduleSetting?.frequency ?? "DAY");
 
   return scheduleScanEnabled ? (
     <>
