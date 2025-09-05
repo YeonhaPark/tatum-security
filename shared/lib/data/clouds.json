@@ -27,8 +27,10 @@
     "credentialType": "ACCESS_KEY",
     "proxyUrl": "",
     "createdAt": "2025-09-03T13:51:49.117Z",
-    "updatedAt": "2025-09-05T03:20:52.851Z",
-    "eventSource": ""
+    "updatedAt": "2025-09-05T03:59:04.211Z",
+    "eventSource": {
+      "cloudTrailName": "trail name"
+    }
   },
   {
     "id": "1756992950026",
@@ -59,7 +61,10 @@
     "credentialType": "APPLICATION",
     "proxyUrl": "http://proxy.proxy12",
     "createdAt": "2025-09-04T13:35:50.026Z",
-    "updatedAt": "2025-09-04T14:31:59.857Z"
+    "updatedAt": "2025-09-05T03:59:27.358Z",
+    "eventSource": {
+      "storageAccountName": "azure"
+    }
   },
   {
     "id": "1756994048759",
@@ -116,7 +121,6 @@
     },
     "credentialType": "ACCESS_KEY",
     "proxyUrl": "",
-    "eventSource": "",
     "createdAt": "2025-09-04T14:57:18.262Z",
     "updatedAt": "2025-09-04T18:01:15.290Z"
   },
@@ -149,8 +153,7 @@
     "credentialType": "ACCESS_KEY",
     "proxyUrl": "",
     "createdAt": "2025-09-04T17:09:43.509Z",
-    "updatedAt": "2025-09-04T17:58:47.518Z",
-    "eventSource": ""
+    "updatedAt": "2025-09-04T17:58:47.518Z"
   },
   {
     "id": "1757042758744",
@@ -178,7 +181,6 @@
     },
     "credentialType": "APPLICATION",
     "proxyUrl": "",
-    "eventSource": "",
     "createdAt": "2025-09-05T03:25:58.744Z",
     "updatedAt": "2025-09-05T03:25:58.744Z"
   },
@@ -208,7 +210,6 @@
     },
     "credentialType": "APPLICATION",
     "proxyUrl": "",
-    "eventSource": "",
     "createdAt": "2025-09-05T03:27:32.834Z",
     "updatedAt": "2025-09-05T03:27:32.834Z"
   }

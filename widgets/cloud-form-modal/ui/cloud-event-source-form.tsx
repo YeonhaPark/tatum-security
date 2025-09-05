@@ -11,23 +11,36 @@ export const CloudEventSourceForm = ({
   control,
 }: CloudEventSourceFormProps) => {
   const provider = useWatch({ name: "provider", control });
-  const label = () => {
+
+  const getFieldConfig = () => {
     switch (provider) {
       case "AWS":
-        return "Cloud Trail Name";
+        return {
+          label: "Cloud Trail Name",
+          fieldName: "eventSource.cloudTrailName" as const,
+        };
       case "GCP":
       case "AZURE":
-        return "Storage Account Name";
+        return {
+          label: "Storage Account Name",
+          fieldName: "eventSource.storageAccountName" as const,
+        };
       default:
-        return "Cloud Trail Name";
+        return {
+          label: "Cloud Trail Name",
+          fieldName: "eventSource.cloudTrailName" as const,
+        };
     }
   };
+
+  const { label, fieldName } = getFieldConfig();
+
   return (
     <div className="mb-10">
       <Label className="mb-3 text-gray-700 font-semibold" htmlFor="eventSource">
-        {label()}
+        {label}
       </Label>
-      <Input id="eventSource" {...register("eventSource")} />
+      <Input id="eventSource" {...register(fieldName)} />
     </div>
   );
 };
